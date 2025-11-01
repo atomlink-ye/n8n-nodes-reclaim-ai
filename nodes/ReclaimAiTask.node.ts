@@ -162,6 +162,19 @@ export class ReclaimAiTask implements INodeType {
         required: true,
       },
       {
+        displayName: 'Time Schedule (Optional)',
+        name: 'timeSchedule',
+        type: 'options',
+        typeOptions: {
+          loadOptionsMethod: 'getTimeSchedules',
+        },
+        default: '',
+        displayOptions: {
+          show: { operation: ['update'] },
+        },
+        description: 'The schedule associated with the task',
+      },
+      {
         displayName: 'Event Category',
         name: 'eventCategory',
         type: 'options',
@@ -474,6 +487,11 @@ export class ReclaimAiTask implements INodeType {
 
             const duration = this.getNodeParameter('duration', i, null) as number | null;
             if (duration !== null) body.timeChunksRequired = Math.ceil(duration / 15);
+
+            const timeSchedule = this.getNodeParameter('timeSchedule', i, null) as string | null;
+            if (timeSchedule !== null && timeSchedule !== '') {
+              body.timeSchemeId = timeSchedule;
+            }
 
             const due = this.getNodeParameter('due', i, null) as string | null;
             if (due !== null && due !== '') {
